@@ -23,6 +23,13 @@ button{border:0;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:7
 .bar{height:9px;background:#e5e9f0;border-radius:9px;overflow:hidden}.bar>div{height:100%;background:linear-gradient(90deg,#168f9a,#416bd5,#8053c5);border-radius:9px}
 .status{padding:12px;border-radius:9px;background:#f1f4f8;font-size:14px}.status.good{background:#eaf8f0;border-left:4px solid #16834a}.status.bad{background:#fff5e8;border-left:4px solid #c47b16}
 .formula{background:#f1f5fb;border:1px solid #d8e1ee;border-radius:8px;padding:11px 13px;margin:8px 0;font-family:"Cambria Math",Cambria,serif;font-size:17px;color:#101827;overflow-x:auto}
+.formula{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.formula mjx-container[display="true"]{margin:.35em 0!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.formula mjx-container{font-size:110%!important}
+#manualGuide .note{overflow-wrap:anywhere}
+#manualGuide li{min-width:0}
+@media(max-width:680px){.formula{padding:10px 9px;font-size:15px}.formula mjx-container{font-size:100%!important}}
+
 footer{text-align:center;color:#354155;font-size:13px;margin-top:18px;line-height:1.8;border-top:1px solid #dce4f3;padding-top:14px}
 @media(max-width:680px){body{padding:12px 8px 30px}.panel{padding:14px}header{padding:18px 15px}h1{font-size:23px}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}td select{min-width:180px}}
 @media print{body{background:white;padding:0}.no-print,.steps{display:none!important}.panel{box-shadow:none;break-inside:avoid}}
@@ -81,22 +88,22 @@ footer{text-align:center;color:#354155;font-size:13px;margin-top:18px;line-heigh
 <div class="panel">
 <h2>Manual Fuzzy AHP Calculation Guide — Buckley Method</h2>
 <p class="intro">The following numbered procedure describes the Buckley fuzzy geometric mean method implemented in this application. Each step can be reproduced manually using the fuzzy pairwise comparison matrix.</p>
-<div class="note"><strong>Notation:</strong> \(\\tilde A=[\\tilde a_{ij}]\) denotes the fuzzy pairwise comparison matrix; \(n\) is the number of criteria; and a triangular fuzzy number is represented by \((l,m,u)\), where \(l\\leq m\\leq u\).</div>
+<div class="note"><strong>Notation:</strong> \[\tilde A=[\tilde a_{ij}]\] denotes the fuzzy pairwise comparison matrix; \[n\] is the number of criteria; and a triangular fuzzy number is represented by \[(l,m,u)\], where \[l\leq m\leq u\].</div>
 <ol style="padding-left:23px;display:grid;gap:13px;line-height:1.7;margin-top:18px">
-<li><strong>Construct the fuzzy pairwise comparison matrix.</strong><div class="formula">\\(\\tilde A=[\\tilde a_{ij}],\\quad \\tilde a_{ii}=(1,1,1)\\)</div>For reciprocal judgments:<div class="formula">\\(\\tilde a_{ji}=\\tilde a_{ij}^{-1}=(1/u_{ij},\\;1/m_{ij},\\;1/l_{ij})\\)</div></li>
-<li><strong>Calculate the fuzzy geometric mean for each criterion.</strong><div class="formula">\\(\\tilde r_i=\\left(\\prod_{j=1}^{n}\\tilde a_{ij}\\right)^{1/n}\\)</div>For TFNs, perform multiplication and the nth root component-wise:<div class="formula">\\(\\tilde r_i=(\\prod_j l_{ij})^{1/n},\\;(\\prod_j m_{ij})^{1/n},\\;(\\prod_j u_{ij})^{1/n}\\)</div></li>
-<li><strong>Sum the fuzzy geometric means.</strong><div class="formula">\\(\\sum_{i=1}^{n}\\tilde r_i=(\\sum_i r_{il},\\;\\sum_i r_{im},\\;\\sum_i r_{iu})\\)</div></li>
-<li><strong>Calculate the inverse of the sum.</strong><div class="formula">\\((\\sum_i\\tilde r_i)^{-1}=(1/\\sum_i r_{iu},\\;1/\\sum_i r_{im},\\;1/\\sum_i r_{il})\\)</div></li>
-<li><strong>Calculate the normalized fuzzy weights (Buckley fuzzy weights).</strong><div class="formula">\\(\\tilde w_i=\\tilde r_i\\otimes(\\sum_{k=1}^{n}\\tilde r_k)^{-1}\\)</div>Thus:<div class="formula">\\(\\tilde w_i=(r_{il}/R_u,\\;r_{im}/R_m,\\;r_{iu}/R_l)\\)</div>where \(R_l=\\sum r_{kl}\), \(R_m=\\sum r_{km}\), and \(R_u=\\sum r_{ku}\).</li>
-<li><strong>Defuzzify each fuzzy weight using the centroid method.</strong><div class="formula">\\(D_i=(w_{il}+w_{im}+w_{iu})/3\\)</div></li>
-<li><strong>Normalize the defuzzified weights.</strong><div class="formula">\\(W_i=D_i/\\sum_{k=1}^{n}D_k\\)</div>The normalized crisp weights should sum to 1:<div class="formula">\\(\\sum_{i=1}^{n}W_i=1\\)</div></li>
-<li><strong>Defuzzify the comparison matrix for a consistency diagnostic.</strong><div class="formula">\\(a_{ij}^{*}=(l_{ij}+m_{ij}+u_{ij})/3\\)</div>Use this reciprocal crisp matrix and the normalized crisp weight vector \(W\) for the consistency calculations below.</li>
-<li><strong>Calculate the weighted-sum vector.</strong><div class="formula">\\(WS_i=\\sum_{j=1}^{n}a_{ij}^{*}W_j\\)</div></li>
-<li><strong>Calculate the consistency vector.</strong><div class="formula">\\(CV_i=WS_i/W_i\\)</div></li>
-<li><strong>Estimate the maximum eigenvalue.</strong><div class="formula">\\(\\lambda_{max}=\\frac{1}{n}\\sum_{i=1}^{n}CV_i\\)</div></li>
-<li><strong>Calculate the Consistency Index.</strong><div class="formula">\\(CI=\\frac{\\lambda_{max}-n}{n-1}\\)</div></li>
-<li><strong>Obtain the Random Index and calculate the Consistency Ratio.</strong><div class="formula">\\(CR=CI/RI\\)</div>Use the Random Index table below. For a 2 × 2 matrix, RI is zero and CR is conventionally reported as zero.</li>
-<li><strong>Evaluate consistency and rank the criteria.</strong><br>A CR of 0.10 or less is generally treated as acceptable for this defuzzified-matrix diagnostic. Rank criteria in descending order of normalized crisp weight \(W_i\); the largest weight receives Rank 1.</li>
+<li><strong>Construct the fuzzy pairwise comparison matrix.</strong><div class="formula">\[\tilde A=[\tilde a_{ij}],\quad \tilde a_{ii}=(1,1,1)\]</div>For reciprocal judgments:<div class="formula">\[\tilde a_{ji}=\tilde a_{ij}^{-1}=(1/u_{ij},\;1/m_{ij},\;1/l_{ij})\]</div></li>
+<li><strong>Calculate the fuzzy geometric mean for each criterion.</strong><div class="formula">\[\tilde r_i=\left(\prod_{j=1}^{n}\tilde a_{ij}\right)^{1/n}\]</div>For TFNs, perform multiplication and the nth root component-wise:<div class="formula">\[\tilde r_i=\left((\prod_{j=1}^{n}l_{ij})^{1/n},\;(\prod_{j=1}^{n}m_{ij})^{1/n},\;(\prod_{j=1}^{n}u_{ij})^{1/n}\right)\]</div></li>
+<li><strong>Sum the fuzzy geometric means.</strong><div class="formula">\[\sum_{i=1}^{n}\tilde r_i=(\sum_i r_{il},\;\sum_i r_{im},\;\sum_i r_{iu})\]</div></li>
+<li><strong>Calculate the inverse of the sum.</strong><div class="formula">\[(\sum_i\tilde r_i)^{-1}=(1/\sum_i r_{iu},\;1/\sum_i r_{im},\;1/\sum_i r_{il})\]</div></li>
+<li><strong>Calculate the normalized fuzzy weights (Buckley fuzzy weights).</strong><div class="formula">\[\tilde w_i=\tilde r_i\otimes(\sum_{k=1}^{n}\tilde r_k)^{-1}\]</div>Thus:<div class="formula">\[\tilde w_i=(r_{il}/R_u,\;r_{im}/R_m,\;r_{iu}/R_l)\]</div>where \[R_l=\sum r_{kl}\], \[R_m=\sum r_{km}\], and \[R_u=\sum r_{ku}\].</li>
+<li><strong>Defuzzify each fuzzy weight using the centroid method.</strong><div class="formula">\[D_i=(w_{il}+w_{im}+w_{iu})/3\]</div></li>
+<li><strong>Normalize the defuzzified weights.</strong><div class="formula">\[W_i=D_i/\sum_{k=1}^{n}D_k\]</div>The normalized crisp weights should sum to 1:<div class="formula">\[\sum_{i=1}^{n}W_i=1\]</div></li>
+<li><strong>Defuzzify the comparison matrix for a consistency diagnostic.</strong><div class="formula">\[a_{ij}^{*}=(l_{ij}+m_{ij}+u_{ij})/3\]</div>Use this reciprocal crisp matrix and the normalized crisp weight vector \[W\] for the consistency calculations below.</li>
+<li><strong>Calculate the weighted-sum vector.</strong><div class="formula">\[WS_i=\sum_{j=1}^{n}a_{ij}^{*}W_j\]</div></li>
+<li><strong>Calculate the consistency vector.</strong><div class="formula">\[CV_i=WS_i/W_i\]</div></li>
+<li><strong>Estimate the maximum eigenvalue.</strong><div class="formula">\[\lambda_{max}=\frac{1}{n}\sum_{i=1}^{n}CV_i\]</div></li>
+<li><strong>Calculate the Consistency Index.</strong><div class="formula">\[CI=\frac{\lambda_{max}-n}{n-1}\]</div></li>
+<li><strong>Obtain the Random Index and calculate the Consistency Ratio.</strong><div class="formula">\[CR=CI/RI\]</div>Use the Random Index table below. For a 2 × 2 matrix, RI is zero and CR is conventionally reported as zero.</li>
+<li><strong>Evaluate consistency and rank the criteria.</strong><br>A CR of 0.10 or less is generally treated as acceptable for this defuzzified-matrix diagnostic. Rank criteria in descending order of normalized crisp weight \[W_i\]; the largest weight receives Rank 1.</li>
 </ol>
 <h3 style="margin-top:18px">Saaty's Random Index (RI)</h3>
 <div class="tablewrap"><table><thead><tr><th>Matrix order (n)</th><th>RI</th></tr></thead><tbody>
@@ -190,7 +197,14 @@ $('download').onclick=()=>{
  add('Final Ranking',[['Rank','Criterion','Weight','Percentage'],...order.map((x,i)=>[i+1,names[x.i],x.v,x.v*100])]);
  XLSX.writeFile(wb,'Fuzzy_AHP_Buckley_Report.xlsx',{bookType:'xlsx',compression:true});
 };
-$('openGuide').onclick=()=>{hide('results');show('manualGuide');if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([$('manualGuide')]);window.scrollTo({top:0,behavior:'smooth'});};
+$('openGuide').onclick=()=>{
+  hide('results');show('manualGuide');
+  const guide=$('manualGuide');
+  const typeset=()=>{if(window.MathJax&&MathJax.typesetPromise){MathJax.typesetClear([guide]);MathJax.typesetPromise([guide]).catch(err=>console.error('MathJax typesetting error:',err));}};
+  if(window.MathJax&&window.MathJax.startup&&window.MathJax.startup.promise){window.MathJax.startup.promise.then(typeset).catch(err=>console.error('MathJax startup error:',err));}
+  else{window.addEventListener('load',typeset,{once:true});}
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 $('backFromGuide').onclick=()=>{hide('manualGuide');show('results');window.scrollTo({top:0,behavior:'smooth'});};
 $('printGuide').onclick=()=>window.print();
 $('editMatrix').onclick=()=>{hide('results');show('matrixSection');setStep(1);};
