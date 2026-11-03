@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#172033">
+<title>AHP Calculator Pro</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#202938;background:#f4f6fa;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;padding:28px 16px 48px}.app{max-width:1120px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:25px;margin:0;font-weight:800;letter-spacing:-.5px}.subtitle,.muted{color:#687386}.subtitle{font-size:13px;margin-top:4px}
+.pill{font-size:11px;border:1px solid #dce2eb;border-radius:30px;padding:6px 10px;background:white;color:#526078}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.step{font-size:12px;padding:8px 12px;border-radius:22px;background:#e9edf4;color:#657084}.step.active{background:#dce9ff;color:#174b9c;font-weight:750}
+.panel{background:white;border:1px solid #e1e6ee;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 9px #192c4610}
+h2{font-size:17px;margin:0 0 8px}.intro{font-size:13px;color:#687386;line-height:1.55;margin:0 0 14px}
+label{display:block;font-size:13px;font-weight:650;margin-bottom:5px}.field{width:100%;border:1px solid #d6dce6;background:white;border-radius:8px;padding:10px 11px;color:#202938;font:inherit}
+button{border:0;border-radius:8px;padding:11px 15px;font-size:13px;font-weight:700;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #9cc3ff;outline-offset:2px}
+.primary{background:#2864c5;color:white}.primary:hover{background:#1f55aa}.secondary{background:white;border:1px solid #d6dce6;color:#273449}.actions{display:flex;gap:9px;flex-wrap:wrap}.actions .primary.flex{flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.error{color:#b42318;font-size:13px;margin-top:8px;min-height:18px}
+.tablewrap{width:100%;overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}th,td{border:1px solid #e0e5ec;padding:9px 10px;text-align:center}th{background:#f1f4f8;font-weight:750}td select{width:100%;min-width:64px;padding:7px;border:1px solid #d6dce6;border-radius:6px;background:white;color:#202938}
+.note{font-size:12px;line-height:1.55;background:#f2f5fa;border-radius:9px;padding:11px;color:#526078}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.metric{background:#f1f4f8;padding:12px;border-radius:9px;min-width:0}.metric span{font-size:11px;color:#687386}.metric strong{display:block;font-size:20px;margin-top:5px;overflow-wrap:anywhere}
+.status{padding:12px;border-radius:9px;background:#f1f4f8;font-size:13px}.status.good{border-left:4px solid #16834a}.status.bad{border-left:4px solid #c47b16}
+.bar{height:8px;background:#e5e9f0;border-radius:9px;overflow:hidden}.bar>div{height:100%;background:#2864c5;border-radius:9px}
+.result-block{margin-bottom:14px}.result-block h3{font-size:15px;margin:0 0 11px}.hidden{display:none!important}
+footer{text-align:center;color:#8791a1;font-size:11px;margin-top:20px}
+@media(max-width:650px){body{padding:17px 10px 35px}.panel{padding:14px}.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:22px}}
+@media print{body{background:white;padding:0}.steps,button,.no-print{display:none!important}.panel{box-shadow:none;break-inside:avoid}}
+
+/* Colourful research-app theme */
+:root{--brand-blue:#2459d3;--brand-violet:#7146c8;--brand-teal:#078b91;--brand-orange:#e58a2b}
+body{background:linear-gradient(135deg,#eef4ff 0%,#f7f1ff 48%,#effbfa 100%)}
+header{background:linear-gradient(115deg,#172f70 0%,#344fc0 52%,#7549bd 100%);color:#fff;padding:22px 24px;border-radius:17px;box-shadow:0 9px 25px #253b7b25}
+header .subtitle{color:#e0e8ff}
+header .pill{background:#ffffff20;color:#fff;border-color:#ffffff55}
+.author-credit{font-size:12px;color:#e9edff;margin-top:7px;line-height:1.5}
+.author-credit strong{color:#fff}
+.panel{border-color:#dce4f3;box-shadow:0 4px 16px #273b6810}
+.panel h2{color:#263e80}
+#matrixSection{border-top:4px solid var(--brand-teal)}
+#results>.panel:nth-child(1){border-top:4px solid var(--brand-violet)}
+#results>.panel:nth-child(2){border-top:3px solid #3478d4}
+#results>.panel:nth-child(3){border-top:3px solid #159b91}
+#results>.panel:nth-child(4){border-top:3px solid #8056c7}
+#results>.panel:nth-child(5){border-top:3px solid #d28b2c}
+#results>.panel:nth-child(6){border-top:3px solid #287fba}
+#results>.panel:nth-child(7){border-top:3px solid #159b91}
+.step.active{background:linear-gradient(100deg,#dceaff,#eee3ff);color:#43328f}
+.primary{background:linear-gradient(110deg,#245fd0,#7049c5);box-shadow:0 3px 9px #3556a52b}
+.primary:hover{background:linear-gradient(110deg,#1c4eae,#5d37b0)}
+.field:focus,td select:focus{border-color:#7654cb;box-shadow:0 0 0 3px #7654cb20}
+th{background:#edf2ff;color:#2e4381}
+.note{background:linear-gradient(110deg,#eaf7f7,#f0edff);border:1px solid #dce5f5}
+.metric:nth-child(1){background:#eaf1ff}.metric:nth-child(2){background:#f0eaff}
+.metric:nth-child(3){background:#e7f7f4}.metric:nth-child(4){background:#fff3e5}
+.metric strong{color:#293f80}
+.bar>div{background:linear-gradient(90deg,#168f9a,#416bd5,#8053c5)}
+.status.good{background:#eaf8f0;border-left-color:#16834a}
+.status.bad{background:#fff5e8;border-left-color:#c47b16}
+footer{padding-top:13px;border-top:1px solid #dce4f3;line-height:1.6}
+@media(max-width:650px){header{padding:18px 15px}}
+
+
+/* Readability update: larger typography and stronger contrast */
+:root{color:#111827;background:#eef2f8}
+body{color:#111827}
+h1{font-size:28px}
+h2{font-size:20px;color:#111827;font-weight:800}
+h3{font-size:17px;color:#111827;font-weight:800}
+.subtitle{font-size:14px;color:#eaf0ff}
+.author-credit{font-size:14px;color:#fff;line-height:1.65}
+.intro{font-size:15px;color:#303b4d;line-height:1.7}
+.muted{color:#3f4b5d}
+label{font-size:15px;color:#111827;font-weight:750}
+.field{font-size:16px;color:#111827;font-weight:550;padding:12px}
+button{font-size:15px;padding:12px 16px}
+.step{font-size:13px;font-weight:650}
+.panel{padding:20px}
+th{font-size:13px;color:#111827;background:#e5ebf5;font-weight:800}
+td{font-size:13px;color:#111827;font-weight:550}
+td select{font-size:14px;color:#111827;font-weight:650;padding:9px}
+.note{font-size:14px;color:#202b3b;line-height:1.75;background:#e8eef8;border-color:#cbd5e1}
+.metric span{font-size:13px;color:#303b4d;font-weight:700}
+.metric strong{font-size:23px;color:#111827;font-weight:850}
+.status{font-size:14px;color:#111827}
+.status .muted{color:#303b4d}
+.error{font-size:14px;font-weight:650}
+footer{font-size:13px;color:#354155;line-height:1.8}
+.pill{font-size:12px;font-weight:700}
+@media(max-width:650px){
+ body{padding:14px 9px 30px}
+ .panel{padding:16px}
+ h1{font-size:24px}
+ h2{font-size:19px}
+ .intro{font-size:14px}
+ th,td{font-size:12px;padding:9px 8px}
+ .metric strong{font-size:21px}
+}
+
+.note{font-size:14px;color:#202b3b}.panel ol li{color:#182235}.panel ol li strong{color:#111827}
+
+/* Improve contrast of the PRO label in the gradient header */
+header h1 span,
+header h1 .muted,
+header h1 span.muted{
+  color:#ffffff !important;
+  font-size:14px !important;
+  font-weight:800 !important;
+  letter-spacing:1px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.48);
+  border-radius:6px;
+  padding:4px 8px;
+  vertical-align:middle;
+  display:inline-block;
+  text-shadow:0 1px 2px rgba(0,0,0,.22);
+}
+
+</style>
+</head>
+<body>
+<main class="app" id="app">
+<header><div><h1>AHP Calculator <span class="muted" style="font-size:13px">PRO</span></h1><div class="subtitle">Analytic Hierarchy Process · Pairwise Comparison & Consistency Analysis</div>
+<div class="author-credit">Developed by <strong>Pintu Das</strong> · Research Scholar, Department of Geography, Raiganj University</div></div><span class="pill">Standalone Web App</span></header>
+<nav class="steps" aria-label="Application steps"><span class="step active">01 · Parameters</span><span class="step">02 · Matrix Input</span><span class="step">03 · Results</span></nav>
+
+<section id="setup" class="panel">
+<h2>Step 1 — Define Parameters</h2><p class="intro">Specify the number of criteria or parameters to be compared.</p>
+<label for="count">Number of Parameters</label><input id="count" class="field" type="number" min="2" max="15" value="4">
+<p class="muted" style="font-size:12px">Minimum 2, Maximum 15 parameters.</p><button id="make" class="primary" style="width:100%">Create Parameter Fields →</button><div id="setupError" class="error" role="alert"></div>
+</section>
+
+<section id="names" class="panel hidden">
+<h2>Step 1B — Parameter Names</h2><p class="intro">Enter a name for each parameter. All parameter names must be unique.</p><div id="nameFields" class="grid"></div>
+<div class="actions" style="margin-top:15px"><button id="backSetup" class="secondary">← Back</button><button id="toMatrix" class="primary flex">Continue to Matrix →</button></div><div id="nameError" class="error" role="alert"></div>
+</section>
+
+<section id="matrixSection" class="panel hidden">
+<h2>Step 2 — Pairwise Comparison Matrix</h2>
+<p class="intro">Select only a normal value (1–9). The reciprocal value will be calculated automatically.</p>
+<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:#687386;margin-bottom:10px"><span id="matrixSize"></span><span>Diagonal = 1 · Reciprocal = 1 / Value</span></div>
+<div class="tablewrap"><table id="matrixTable"></table></div>
+<div class="panel" style="margin-top:14px;background:#f8faff;border-color:#cbd8f0">
+<h3 style="font-size:16px;margin:0 0 10px;color:#172554">Saaty's Fundamental Scale of Relative Importance</h3>
+<div class="tablewrap"><table><thead><tr><th>Scale</th><th>Definition</th></tr></thead><tbody>
+<tr><td>1</td><td>Equal importance</td></tr><tr><td>2</td><td>Intermediate value between 1 and 3</td></tr><tr><td>3</td><td>Moderate importance</td></tr><tr><td>4</td><td>Intermediate value between 3 and 5</td></tr><tr><td>5</td><td>Strong importance</td></tr><tr><td>6</td><td>Intermediate value between 5 and 7</td></tr><tr><td>7</td><td>Very strong importance</td></tr><tr><td>8</td><td>Intermediate value between 7 and 9</td></tr><tr><td>9</td><td>Extreme importance</td></tr>
+</tbody></table></div>
+<p class="muted" style="font-size:13px;line-height:1.6;margin:10px 0 0">Reciprocal judgments (1/2 to 1/9) are calculated automatically in the opposite triangular cells. A Consistency Ratio (CR) of 0.10 or less is generally considered acceptable.</p>
+</div>
+<div class="note" style="margin-top:12px"><strong>Input Instruction</strong><br>Select a value from 1 to 9 in the upper triangular part of the matrix. The corresponding reciprocal value will appear automatically in the lower triangular part.<br><br>Example: If A is compared with B using a value of 3, the reciprocal comparison (B relative to A) is 1/3 = 0.3333.</div>
+<div class="actions" style="margin-top:14px"><button id="backNames" class="secondary">← Edit Names</button><button id="calculate" class="primary flex">Calculate AHP Results →</button></div><div id="matrixError" class="error" role="alert"></div>
+</section>
+
+<section id="results" class="hidden">
+<div class="panel"><h2>Step 3 — AHP Analysis Report</h2><div id="status" style="margin:12px 0"></div><div id="metrics" class="metrics"></div></div>
+<div class="panel result-block"><h3>1. Original Pairwise Comparison Matrix</h3><div id="originalTable" class="tablewrap"></div></div>
+<div class="panel result-block"><h3>2. Column Sum</h3><div id="columnTable" class="tablewrap"></div></div>
+<div class="panel result-block"><h3>3. Normalized Matrix</h3><div id="normalizedTable" class="tablewrap"></div></div>
+<div class="panel result-block"><h3>4. Priority Vector / Criteria Weights</h3><div id="weightTable" class="tablewrap"></div><div id="bars" style="display:grid;gap:11px;margin-top:14px"></div></div>
+<div class="panel result-block"><h3>5. Weighted Sum & Consistency Vector</h3><div id="consistencyTable" class="tablewrap"></div></div>
+<div class="panel result-block"><h3>6. Consistency Analysis</h3><div id="ciTable" class="tablewrap"></div><p id="ciExplain" class="muted" style="font-size:13px;line-height:1.5;margin-bottom:0"></p></div>
+<div class="panel result-block"><h3>7. Final Ranking</h3><div id="rankingTable" class="tablewrap"></div></div>
+<div class="panel"><h2>Download Complete AHP Report</h2><p class="intro">Original Matrix, Column Sum, Normalized Matrix, Weights, Consistency এবং Final Ranking-সহ Excel-compatible multi-sheet report.</p><button id="download" class="primary" style="width:100%">↓ Download Excel Report (.xls)</button><p class="muted" style="font-size:11px;margin-bottom:0">Excel XML Workbook · Multiple worksheets</p></div>
+<div class="actions no-print" style="margin-bottom:10px"><button id="openGuide" class="secondary" style="width:100%">View Manual Calculation Guide →</button></div>
+<div class="actions no-print"><button id="editMatrix" class="secondary" style="flex:1">← Edit Matrix</button><button id="restart" class="secondary" style="flex:1">New Analysis</button></div>
+</section>
+
+
+
+<section id="manualGuide" class="hidden">
+<div class="panel">
+<h2>Manual AHP Calculation Guide</h2>
+<p class="intro">This guide presents the calculation procedure and equations used in the application. You can reproduce the analysis manually using the pairwise comparison matrix.</p>
+<div class="note"><strong>Notation</strong><br>
+\(A=[a_{ij}]\) is the pairwise comparison matrix; \(n\) is the number of criteria; \(w_i\) is the priority weight of criterion \(i\); and \(RI\) is the Random Index.</div>
+<ol style="padding-left:23px;display:grid;gap:15px;line-height:1.65;margin-top:18px">
+<li><strong>Construct the pairwise comparison matrix.</strong><br>Enter the relative importance of each pair of criteria using Saaty's scale. The diagonal elements are equal to 1, and reciprocal elements satisfy:<div class="note" style="margin-top:7px">\(a_{ii}=1\)<br>\(a_{ji}=1/a_{ij}\)</div></li>
+<li><strong>Calculate the sum of each column.</strong><br>Add all entries in each column \(j\):<div class="note" style="margin-top:7px">\(S_j=\sum_{i=1}^{n}a_{ij}\)</div></li>
+<li><strong>Normalize the pairwise comparison matrix.</strong><br>Divide each element by the sum of its corresponding column:<div class="note" style="margin-top:7px">\(b_{ij}=a_{ij}/S_j\)</div></li>
+<li><strong>Calculate the priority vector (criteria weights).</strong><br>Calculate the arithmetic mean of each row of the normalized matrix:<div class="note" style="margin-top:7px">\(w_i=\frac{1}{n}\sum_{j=1}^{n}b_{ij}\)</div>The weights should sum to approximately 1:<div class="note" style="margin-top:7px">\(\sum_{i=1}^{n}w_i=1\)</div></li>
+<li><strong>Calculate the weighted-sum vector.</strong><br>Multiply the original comparison matrix by the priority vector:<div class="note" style="margin-top:7px">\(WS_i=\sum_{j=1}^{n}a_{ij}w_j\)</div></li>
+<li><strong>Calculate the consistency vector.</strong><br>Divide each weighted-sum value by its corresponding priority weight:<div class="note" style="margin-top:7px">\(CV_i=WS_i/w_i\)</div></li>
+<li><strong>Estimate the maximum eigenvalue.</strong><br>Calculate the arithmetic mean of the consistency vector:<div class="note" style="margin-top:7px">\(\\lambda_{max}=\frac{1}{n}\sum_{i=1}^{n}CV_i\)</div></li>
+<li><strong>Calculate the Consistency Index (CI).</strong><div class="note" style="margin-top:7px">\(CI=\frac{\\lambda_{max}-n}{n-1}\)</div></li>
+<li><strong>Identify the Random Index (RI).</strong><br>Use the standard Saaty Random Index corresponding to the matrix order \(n\):</li>
+</ol>
+<div class="tablewrap" style="margin:10px 0 16px"><table><thead><tr><th>Matrix order (n)</th><th>Random Index (RI)</th></tr></thead><tbody>
+<tr><td>1</td><td>0.00</td></tr><tr><td>2</td><td>0.00</td></tr><tr><td>3</td><td>0.58</td></tr><tr><td>4</td><td>0.90</td></tr><tr><td>5</td><td>1.12</td></tr><tr><td>6</td><td>1.24</td></tr><tr><td>7</td><td>1.32</td></tr><tr><td>8</td><td>1.41</td></tr><tr><td>9</td><td>1.45</td></tr><tr><td>10</td><td>1.49</td></tr><tr><td>11</td><td>1.51</td></tr><tr><td>12</td><td>1.48</td></tr><tr><td>13</td><td>1.56</td></tr><tr><td>14</td><td>1.57</td></tr><tr><td>15</td><td>1.59</td></tr>
+</tbody></table></div>
+<ol start="10" style="padding-left:23px;display:grid;gap:15px;line-height:1.65">
+<li><strong>Calculate the Consistency Ratio (CR).</strong><div class="note" style="margin-top:7px">\(CR=CI/RI\)</div>For a 2 × 2 matrix, RI is zero; the consistency ratio is conventionally treated as 0.</li>
+<li><strong>Evaluate the consistency of the judgments.</strong><br>A CR value of 0.10 or less is generally considered acceptable. If CR exceeds 0.10, review and revise the pairwise judgments where appropriate.</li>
+<li><strong>Rank the criteria.</strong><br>Arrange the criteria in descending order of their priority weights. The criterion with the highest weight receives Rank 1.</li>
+</ol>
+<div class="note" style="margin-top:16px"><strong>Methodological note:</strong> This application estimates the priority vector using the normalized-column arithmetic mean method. The maximum eigenvalue and consistency statistics are approximated from that priority vector. Small numerical differences may occur compared with software that computes the principal eigenvector directly.</div>
+<div class="actions no-print" style="margin-top:16px"><button id="backFromGuide" class="secondary">← Return to AHP Results</button><button id="printGuide" class="primary">Print Manual Guide</button></div>
+</div>
+</section>
+
+<footer><strong>Developed by Pintu Das</strong><br>Research Scholar, Department of Geography, Raiganj University<br>AHP Calculator Pro · Normalized Column Arithmetic Mean Method · All calculations are performed locally in your browser</footer>
+</main>
+<script>
+window.MathJax = {
+  tex: {inlineMath: [['\\(', '\\)'], ['$', '$']]},
+  options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const hide = id => $(id).classList.add('hidden');
+const show = id => $(id).classList.remove('hidden');
+let n = 4, names = [], matrix = [], result = null;
+const RI = {2:0,3:.58,4:.90,5:1.12,6:1.24,7:1.32,8:1.41,9:1.45,10:1.49,11:1.51,12:1.48,13:1.56,14:1.57,15:1.59};
+const fmt = (v,d=4) => Number(v).toFixed(d);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function setStep(k){document.querySelectorAll('#app .step').forEach((el,i)=>el.classList.toggle('active',i===k));}
+function makeTable(headers,rows){return '<table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(x=>'<td>'+x+'</td>').join('')+'</tr>').join('')+'</tbody></table>';}
+
+$('make').addEventListener('click',()=>{
+ n=Number($('count').value);
+ if(!Number.isInteger(n)||n<2||n>15){$('setupError').textContent='Enter an integer between 2 and 15.';return;}
+ $('setupError').textContent='';
+ names=Array.from({length:n},(_,i)=>names[i]||'Parameter '+(i+1));
+ $('nameFields').innerHTML=names.map((v,i)=>`<label>Parameter ${i+1}<input class="field pname" maxlength="60" data-i="${i}" value="${esc(v)}" autocomplete="off"></label>`).join('');
+ hide('setup');show('names');setStep(0);
+});
+$('backSetup').addEventListener('click',()=>{hide('names');show('setup');});
+$('toMatrix').addEventListener('click',()=>{
+ names=[...document.querySelectorAll('#nameFields .pname')].map(x=>x.value.trim());
+ if(names.some(x=>!x)||new Set(names.map(x=>x.toLocaleLowerCase())).size!==n){$('nameError').textContent='Enter unique, non-empty parameter names.';return;}
+ $('nameError').textContent='';
+ matrix=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?1:1));
+ let html='<thead><tr><th>Parameters</th>'+names.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
+ for(let i=0;i<n;i++){
+  html+='<tr><th>'+esc(names[i])+'</th>';
+  for(let j=0;j<n;j++){
+   if(i===j)html+='<td>1</td>';
+   else if(i<j)html+=`<td><select class="pair" data-i="${i}" data-j="${j}" aria-label="${esc(names[i])} compared with ${esc(names[j])}">${Array.from({length:9},(_,k)=>`<option value="${k+1}" ${k===0?'selected':''}>${k+1}</option>`).join('')}</select></td>`;
+   else html+=`<td id="recip-${i}-${j}" class="muted">1.0000</td>`;
+  }
+  html+='</tr>';
+ }
+ $('matrixTable').innerHTML=html+'</tbody>';
+ $('matrixSize').textContent=n+' × '+n+' Matrix';
+ document.querySelectorAll('#matrixTable .pair').forEach(sel=>sel.addEventListener('change',()=>{
+  const i=Number(sel.dataset.i),j=Number(sel.dataset.j),v=Number(sel.value);
+  matrix[i][j]=v;matrix[j][i]=1/v;
+  $('recip-'+j+'-'+i).textContent=fmt(1/v,4);
+ }));
+ hide('names');show('matrixSection');setStep(1);
+});
+$('backNames').addEventListener('click',()=>{hide('matrixSection');show('names');setStep(0);});
+$('calculate').addEventListener('click',()=>{
+ document.querySelectorAll('#matrixTable .pair').forEach(sel=>{
+  const i=Number(sel.dataset.i),j=Number(sel.dataset.j),v=Number(sel.value);
+  matrix[i][j]=v;matrix[j][i]=1/v;
+ });
+ const sums=Array.from({length:n},(_,j)=>matrix.reduce((s,row)=>s+row[j],0));
+ const normalized=matrix.map(row=>row.map((v,j)=>v/sums[j]));
+ const weights=normalized.map(row=>row.reduce((s,v)=>s+v,0)/n);
+ const weighted=matrix.map(row=>row.reduce((s,v,j)=>s+v*weights[j],0));
+ const consistency=weighted.map((v,i)=>v/weights[i]);
+ const lambda=consistency.reduce((s,v)=>s+v,0)/n;
+ const ci=(lambda-n)/(n-1),ri=RI[n]??null,cr=ri===null?null:(ri===0?0:ci/ri);
+ result={sums,normalized,weights,weighted,consistency,lambda,ci,ri,cr};
+ renderResults();hide('matrixSection');show('results');setStep(2);
+});
+function renderResults(){
+ const {sums,normalized,weights,weighted,consistency,lambda,ci,ri,cr}=result;
+ const acceptable=cr!==null&&cr<=.1;
+ $('status').className='status '+(acceptable?'good':'bad');
+ $('status').innerHTML=`<strong>${acceptable?'✓ Consistency Acceptable':cr===null?'RI unavailable':'⚠ Consistency Not Acceptable'}</strong><div class="muted" style="margin-top:4px">${cr===null?'RI is unavailable for this matrix size.':acceptable?'CR ≤ 0.10. Comparisons pass the standard consistency threshold.':'CR > 0.10. Review the pairwise judgments.'}</div>`;
+ $('metrics').innerHTML=[['λ max',fmt(lambda)],['CI',fmt(ci)],['RI',ri===null?'N/A':fmt(ri)],['CR',cr===null?'N/A':fmt(cr*100,2)+'%']].map(x=>`<div class="metric"><span>${x[0]}</span><strong>${x[1]}</strong></div>`).join('');
+ $('originalTable').innerHTML=makeTable(['Parameter',...names],matrix.map((row,i)=>[esc(names[i]),...row.map(v=>fmt(v))]));
+ $('columnTable').innerHTML=makeTable(['Column',...names],[['Column Sum',...sums.map(v=>fmt(v))]]);
+ $('normalizedTable').innerHTML=makeTable(['Parameter',...names,'Row Average'],normalized.map((row,i)=>[esc(names[i]),...row.map(v=>fmt(v)),fmt(weights[i])]));
+ $('weightTable').innerHTML=makeTable(['Parameter','Priority Weight','Percentage'],weights.map((v,i)=>[esc(names[i]),fmt(v,6),fmt(v*100,2)+'%']));
+ $('bars').innerHTML=weights.map((v,i)=>`<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>${esc(names[i])}</span><strong>${fmt(v*100,2)}%</strong></div><div class="bar"><div style="width:${Math.max(0,Math.min(100,v*100))}%"></div></div></div>`).join('');
+ $('consistencyTable').innerHTML=makeTable(['Parameter','Weighted Sum','Weight','Consistency Vector'],names.map((x,i)=>[esc(x),fmt(weighted[i]),fmt(weights[i]),fmt(consistency[i])]));
+ $('ciTable').innerHTML=makeTable(['Indicator','Value'],[['Number of Parameters',n],['Maximum Eigenvalue (λmax)',fmt(lambda)],['Consistency Index (CI)',fmt(ci)],['Random Index (RI)',ri===null?'N/A':fmt(ri)],['Consistency Ratio (CR)',cr===null?'N/A':fmt(cr)],['CR (%)',cr===null?'N/A':fmt(cr*100,2)+'%'],['Threshold','0.10 (10%)'],['Status',cr===null?'RI unavailable':acceptable?'Acceptable':'Not Acceptable']]);
+ $('ciExplain').textContent=cr===null?'RI values above 15 are not included.':`CR = CI / RI = ${fmt(ci)} / ${fmt(ri)} = ${fmt(cr)}. ${acceptable?'The comparisons pass the 0.10 threshold.':'The comparisons do not pass the 0.10 threshold; revise judgments and recalculate.'}`;
+ const ranking=weights.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
+ $('rankingTable').innerHTML=makeTable(['Rank','Parameter','Weight','Percentage'],ranking.map((x,i)=>[i+1,esc(names[x.i]),fmt(x.v,6),fmt(x.v*100,2)+'%']));
+}
+function downloadExcelXml(){
+ if(!result)return;
+ if(typeof XLSX==='undefined'){
+  alert('Excel export library could not load. Please check your internet connection and try again.');
+  return;
+ }
+ const wb=XLSX.utils.book_new();
+ const addSheet=(name,rows)=>XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),name);
+ addSheet('Original Matrix',[['Parameter',...names],...matrix.map((row,i)=>[names[i],...row])]);
+ addSheet('Column Sum',[['Column','Sum'],...names.map((v,i)=>[v,result.sums[i]])]);
+ addSheet('Normalized Matrix',[['Parameter',...names,'Priority Weight'],...result.normalized.map((row,i)=>[names[i],...row,result.weights[i]])]);
+ addSheet('Weights',[['Parameter','Priority Weight','Percentage'],...names.map((v,i)=>[v,result.weights[i],result.weights[i]*100])]);
+ addSheet('Consistency',[['Parameter','Weighted Sum','Consistency Vector'],...names.map((v,i)=>[v,result.weighted[i],result.consistency[i]])]);
+ addSheet('AHP Summary',[['Indicator','Value'],['Number of Parameters',n],['Maximum Eigenvalue (lambda max)',result.lambda],['Consistency Index (CI)',result.ci],['Random Index (RI)',result.ri===null?'N/A':result.ri],['Consistency Ratio (CR)',result.cr===null?'N/A':result.cr],['CR Percentage',result.cr===null?'N/A':result.cr*100],['Consistency Status',result.cr===null?'RI unavailable':result.cr<=.1?'Acceptable':'Not Acceptable']]);
+ const ranking=result.weights.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
+ addSheet('Final Ranking',[['Rank','Parameter','Weight','Percentage'],...ranking.map((x,i)=>[i+1,names[x.i],x.v,x.v*100])]);
+ XLSX.writeFile(wb,'AHP_Complete_Report.xlsx',{bookType:'xlsx',compression:true});
+}
+$('download').addEventListener('click',downloadExcelXml);
+$('editMatrix').addEventListener('click',()=>{hide('results');show('matrixSection');setStep(1);});
+$('openGuide').addEventListener('click',()=>{hide('results');show('manualGuide');if(window.MathJax&&window.MathJax.typesetPromise){window.MathJax.typesetPromise([$('manualGuide')]);}window.scrollTo({top:0,behavior:'smooth'});});
+$('backFromGuide').addEventListener('click',()=>{hide('manualGuide');show('results');window.scrollTo({top:0,behavior:'smooth'});});
+$('printGuide').addEventListener('click',()=>window.print());
+$('restart').addEventListener('click',()=>{names=[];result=null;$('count').value=4;hide('results');show('setup');setStep(0);});
+})();
+</script>
+</body>
+</html>
